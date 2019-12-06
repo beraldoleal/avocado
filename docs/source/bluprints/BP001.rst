@@ -7,6 +7,9 @@
 :Type: Epic Blueprint
 :Status: Draft
 
+.. contents:: Table of Contents
+.. section-numbering::
+
 TL;DR
 #####
 
@@ -23,9 +26,6 @@ This document has the intention to list the requirements before coding. And
 note that, since this is a relatively big change, this blueprint will be broken
 into small cards/issues. At the end of this document you can find a list of all
 issues that we should solve in order to solve this big epic Blueprint.
-
-.. contents:: Table of Contents
-.. section-numbering::
 
 Motivation
 ##########
