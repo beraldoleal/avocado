@@ -3,6 +3,7 @@ import tempfile
 import unittest
 
 from avocado.core import exit_codes
+from avocado.utils import cpu
 from avocado.utils import process
 from avocado.utils import script
 
@@ -69,6 +70,27 @@ class SysInfoTest(unittest.TestCase):
                               'Output produced: "%s" % output'))
         msg = 'Avocado created sysinfo directory %s:\n%s' % (sysinfo_dir, result)
         self.assertFalse(os.path.isdir(sysinfo_dir), msg)
+
+    def test_sysinfo_html_output(self):
+        os.chdir(BASEDIR)
+        html_output = "{}/output.html".format(self.tmpdir.name)
+        cmd_line = ('{} run --html {} --job-results-dir {} --sysinfo=on '
+                    'passtest.py'.format(AVOCADO, html_output,
+                                         self.tmpdir.name))
+        result = process.run(cmd_line)
+        expected_rc = exit_codes.AVOCADO_ALL_OK
+        self.assertEqual(result.exit_status, expected_rc,
+                         'Avocado did not return rc %d:\n%s' % (expected_rc,
+                                                                result))
+        with open(html_output, 'rt') as fp:
+            output = fp.read()
+
+        # Try to find some strings on HTML
+        arch = cpu.get_cpu_arch()
+        if not arch.startswith('power'):
+            self.assertNotEqual(output.find('vendor'), -1)
+            self.assertNotEqual(output.find('root='), -1)
+            self.assertNotEqual(output.find('MemAvailable'), -1)
 
     def tearDown(self):
         self.tmpdir.cleanup()
