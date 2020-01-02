@@ -32,7 +32,8 @@ class SysInfoTest(unittest.TestCase):
         result = process.run(cmd_line)
         expected_rc = exit_codes.AVOCADO_ALL_OK
         self.assertEqual(result.exit_status, expected_rc,
-                         'Avocado did not return rc %d:\n%s' % (expected_rc, result))
+                         'Avocado did not return rc %d:\n%s' % (expected_rc,
+                                                                result))
         output = result.stdout_text + result.stderr_text
         sysinfo_dir = None
         for line in output.splitlines():
@@ -42,13 +43,15 @@ class SysInfoTest(unittest.TestCase):
         self.assertIsNotNone(sysinfo_dir,
                              ('Could not find sysinfo dir from human output. '
                               'Output produced: "%s" % output'))
-        msg = "Avocado didn't create sysinfo directory %s:\n%s" % (sysinfo_dir, result)
+        msg = "Avocado didn't create sysinfo directory %s:\n%s" % (sysinfo_dir,
+                                                                   result)
         self.assertTrue(os.path.isdir(sysinfo_dir), msg)
         msg = 'The sysinfo directory is empty:\n%s' % result
         self.assertGreater(len(os.listdir(sysinfo_dir)), 0, msg)
         for hook in ('pre', 'post'):
             sysinfo_subdir = os.path.join(sysinfo_dir, hook)
-            msg = 'The sysinfo/%s subdirectory does not exist:\n%s' % (hook, result)
+            msg = 'The sysinfo/%s subdirectory does not exist:\n%s' % (hook,
+                                                                       result)
             self.assertTrue(os.path.exists(sysinfo_subdir), msg)
 
     def test_sysinfo_disabled(self):
@@ -58,7 +61,8 @@ class SysInfoTest(unittest.TestCase):
         result = process.run(cmd_line)
         expected_rc = exit_codes.AVOCADO_ALL_OK
         self.assertEqual(result.exit_status, expected_rc,
-                         'Avocado did not return rc %d:\n%s' % (expected_rc, result))
+                         'Avocado did not return rc %d:\n%s' % (expected_rc,
+                                                                result))
         output = result.stdout_text + result.stderr_text
         sysinfo_dir = None
         for line in output.splitlines():
@@ -68,7 +72,8 @@ class SysInfoTest(unittest.TestCase):
         self.assertIsNotNone(sysinfo_dir,
                              ('Could not find sysinfo dir from human output. '
                               'Output produced: "%s" % output'))
-        msg = 'Avocado created sysinfo directory %s:\n%s' % (sysinfo_dir, result)
+        msg = 'Avocado created sysinfo directory %s:\n%s' % (sysinfo_dir,
+                                                             result)
         self.assertFalse(os.path.isdir(sysinfo_dir), msg)
 
     def test_sysinfo_html_output(self):
