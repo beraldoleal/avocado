@@ -61,6 +61,7 @@ class AvocadoApp:
             if self.cli_dispatcher.extensions:
                 self.cli_dispatcher.map_method('configure', self.parser)
             self.parser.finish()
+            settings.merge_with_arguments(self.parser.config)
             if self.cli_dispatcher.extensions:
                 self.cli_dispatcher.map_method('run', self.parser.config)
         except SystemExit as detail:
