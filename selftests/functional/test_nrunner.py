@@ -149,6 +149,7 @@ class TaskRun(unittest.TestCase):
         lines = res.stdout_text.splitlines()
         # based on the :data:`avocado.core.nrunner.RUNNER_RUN_STATUS_INTERVAL`
         # this runnable should produce multiple status lines
+        print(lines)
         self.assertGreater(len(lines), 1)
         first_status = lines[0]
         self.assertIn("'status': 'running'", first_status)
