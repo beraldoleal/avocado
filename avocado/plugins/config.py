@@ -13,6 +13,7 @@
 # Author: Lucas Meneghel Rodrigues <lmr@redhat.com>
 
 from avocado.core import data_dir
+from avocado.core.future.settings import settings as future_settings
 from avocado.core.output import LOG_UI
 from avocado.core.plugin_interfaces import CLICmd
 from avocado.core.settings import settings
@@ -29,12 +30,24 @@ class Config(CLICmd):
 
     def configure(self, parser):
         parser = super(Config, self).configure(parser)
-        parser.add_argument('--datadir', action='store_true', default=False,
-                            help='Shows the data directories currently being used by avocado')
-        parser.add_argument('--paginator',
-                            choices=('on', 'off'), default='on',
-                            help='Turn the paginator on/off. '
-                            'Current: %(default)s')
+
+        help_msg = 'Shows the data directories currently being used by Avocado'
+        future_settings.register_option(section='config',
+                                        key='datadir',
+                                        default=False,
+                                        help_msg=help_msg,
+                                        key_type=bool,
+                                        parser=parser,
+                                        long_arg='--datadir')
+
+        help_msg = 'Turn the paginator on/off. Default: on'
+        future_settings.register_option(section='config',
+                                        key='paginator',
+                                        default='on',
+                                        help_msg=help_msg,
+                                        choices=('on', 'off'),
+                                        parser=parser,
+                                        long_arg='--paginator')
 
     def run(self, config):
         LOG_UI.info("Config files read (in order, '*' means the file exists "
@@ -45,7 +58,7 @@ class Config(CLICmd):
             else:
                 LOG_UI.debug('      %s', cfg_path)
         LOG_UI.debug("")
-        if not config.get("datadir"):
+        if not future_settings.get('config', 'datadir'):
             blength = 0
             for section in settings.config.sections():
                 for value in settings.config.items(section):
