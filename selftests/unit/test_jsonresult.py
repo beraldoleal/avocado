@@ -5,6 +5,8 @@ import tempfile
 
 from avocado import Test
 from avocado.core import job
+from avocado.core.future.settings import settings
+from avocado.core.future.settings import DuplicatedNamespace
 from avocado.core.result import Result
 from avocado.plugins import jsonresult
 
@@ -30,8 +32,14 @@ class JSONResultTest(unittest.TestCase):
         self.tmpfile = tempfile.mkstemp()
         prefix = temp_dir_prefix(__name__, self, 'setUp')
         self.tmpdir = tempfile.TemporaryDirectory(prefix=prefix)
-        config = {'json_output': self.tmpfile[1],
-                  'base_logdir': self.tmpdir.name}
+        config = {'base_logdir': self.tmpdir.name}
+        try:
+            settings.register_option(section='run.json',
+                                     key='output',
+                                     default=self.tmpfile[1],
+                                     help_msg='just a test')
+        except DuplicatedNamespace:
+            pass  # This only needs to be executed once
         self.job = job.Job(config)
         self.test_result = Result(UNIQUE_ID, LOGFILE)
         self.test_result.filename = self.tmpfile[1]
@@ -51,7 +59,7 @@ class JSONResultTest(unittest.TestCase):
         self.test_result.end_tests()
         json_result = jsonresult.JSONResult()
         json_result.render(self.test_result, self.job)
-        with open(self.job.config.get('json_output')) as fp:
+        with open(settings.get('run.json', 'output')) as fp:
             j = fp.read()
         obj = json.loads(j)
         self.assertTrue(obj)
@@ -86,7 +94,7 @@ class JSONResultTest(unittest.TestCase):
         self.test_result.end_tests()
         json_result = jsonresult.JSONResult()
         json_result.render(self.test_result, self.job)
-        res = json.loads(open(self.job.config.get('json_output')).read())
+        res = json.loads(open(settings.get('run.json', 'output')).read())
         check_item("[pass]", res["pass"], 2)
         check_item("[errors]", res["errors"], 4)
         check_item("[failures]", res["failures"], 1)
@@ -104,7 +112,7 @@ class JSONResultTest(unittest.TestCase):
         self.test_result.end_tests()
         json_result = jsonresult.JSONResult()
         json_result.render(self.test_result, self.job)
-        res = json.loads(open(self.job.config.get('json_output')).read())
+        res = json.loads(open(settings.get('run.json', 'output')).read())
         check_item("[total]", res["total"], 1)
         check_item("[skip]", res["skip"], 0)
         check_item("[pass]", res["pass"], 1)
