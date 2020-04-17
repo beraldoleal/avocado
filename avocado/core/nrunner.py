@@ -342,7 +342,7 @@ class ExecRunner(BaseRunner):
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            env=env)
+            env=None)
 
         yield self.prepare_status('started')
         most_current_execution_state_time = None
