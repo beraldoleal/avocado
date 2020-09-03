@@ -226,10 +226,10 @@ class OutputTest(TestCaseTmpDir):
         _check_output(joblog, exps, "job.log")
         testdir = res["tests"][0]["logdir"]
         with open(os.path.join(testdir, "stdout"), 'rb') as stdout_file:
-            self.assertEqual(b"test_print\ntest_stdout\ntest_process__test_stdout__",
+            self.assertEqual(b"test_print\n\n\ntest_stdout\n\ntest_process\n__test_stdout__\n",
                              stdout_file.read())
         with open(os.path.join(testdir, "stderr"), 'rb') as stderr_file:
-            self.assertEqual(b"test_stderr\n__test_stderr__",
+            self.assertEqual(b"test_stderr\n\n__test_stderr__\n",
                              stderr_file.read())
 
         # Now run the same test, but with combined output
