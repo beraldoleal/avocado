@@ -89,6 +89,15 @@ class AssetsFetchSuccess(unittest.TestCase):
         self.assertEqual(expected_rc, result.exit_status)
         self.assertIn(expected_output, result.stdout_text)
 
+    def test_asset_register_by_name_fail(self):
+        """Test register command success."""
+        url = "https://urlnotfound"
+        cmd_line = "%s assets register hello-kernel %s" % (AVOCADO, url)
+        result = process.run(cmd_line)
+
+        self.assertIn("Failed to fetch",
+                      result.stderr_text)
+
     def tearDown(self):
         self.base_dir.cleanup()
 
