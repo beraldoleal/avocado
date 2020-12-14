@@ -333,6 +333,8 @@ class Asset:
         cache_dir = self._get_writable_cache_dir()
         # Now we have a writable cache_dir. Let's get the asset.
         for url in self.urls:
+            if url is None:
+                continue
             urlobj = urlparse(url)
             if urlobj.scheme in ['http', 'https', 'ftp']:
                 fetch = self._download
