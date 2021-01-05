@@ -1,0 +1,63 @@
+name: Avocado Gating CI
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: Logical, stylistic, analytical and formatter checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Run a basic test
+        run: /bin/true
+
+      - name: Creating a file
+        run: date > /tmp/foo
+
+  unit:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-latest]
+        python-version: [3.6, 3.7, 3.8]
+
+    needs: lint
+    steps:
+      - name: Running unit tests
+        run: /bin/true
+
+  functional:
+    name: Functional Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-latest]
+        python-version: [3.6, 3.7, 3.8]
+
+    needs: lint
+    steps:
+      - name: Running functional tests
+        run: /bin/true
+
+  install:
+    name: Install Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-latest]
+        python-version: [3.6, 3.7, 3.8]
+
+    needs: lint
+    steps:
+      - name: Installing from pip+GitHub
+        run: /bin/true
+
+      - name: Installing from pip+PyPi
+        run: /bin/true
+
+      - name: Installing from RPM
+        run: /bin/true
